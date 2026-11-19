@@ -128,6 +128,37 @@ public sealed class ShellExplorerTests
         }
     });
 
+    [Fact]
+    public void ClosingDuringAsynchronousLoadingDoesNotEscapeCancellation() => RunSta(() =>
+    {
+        Exception? asynchronousFailure = null;
+        ThreadExceptionEventHandler handler = (_, eventArgs) => asynchronousFailure = eventArgs.Exception;
+        Application.ThreadException += handler;
+        try
+        {
+            using var form = new Form { ClientSize = new Size(900, 600), ShowInTaskbar = false, Opacity = 0 };
+            var explorer = new ShellExplorerControl();
+            form.Controls.Add(explorer);
+            form.Show();
+            Application.DoEvents();
+            explorer.Dispose();
+
+            DateTime settle = DateTime.UtcNow.AddMilliseconds(500);
+            do
+            {
+                Application.DoEvents();
+                Thread.Sleep(20);
+            }
+            while (DateTime.UtcNow < settle);
+
+            Assert.Null(asynchronousFailure);
+        }
+        finally
+        {
+            Application.ThreadException -= handler;
+        }
+    });
+
     private static IEnumerable<T> FindControls<T>(Control root) where T : Control
     {
         foreach (Control child in root.Controls)

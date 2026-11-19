@@ -277,6 +277,9 @@ public sealed class ShellExplorerControl : UserControl
 
             state.ChildrenLoaded = true;
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
         finally
         {
             state.LoadingChildren = false;
@@ -343,6 +346,9 @@ public sealed class ShellExplorerControl : UserControl
                 ResizeNameColumn();
             }
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
         finally
         {
             if (entries is not null)
@@ -388,6 +394,11 @@ public sealed class ShellExplorerControl : UserControl
         }
 
         await LoadChildrenAsync(selectedNode, lifetime.Token).ConfigureAwait(true);
+        if (lifetime.IsCancellationRequested || IsDisposed)
+        {
+            return;
+        }
+
         TreeNode? childNode = selectedNode.Nodes.Cast<TreeNode>()
             .FirstOrDefault(node => node.Tag is TreeNodeState state
                 && string.Equals(state.Item.ParsingName, item.ParsingName, StringComparison.OrdinalIgnoreCase));
