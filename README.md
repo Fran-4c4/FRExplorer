@@ -2,7 +2,7 @@
 
 FRExplorer is a reusable WinForms control that displays the real Windows Shell namespace. It includes Desktop, This PC, Network, Recycle Bin, virtual folders, drives and physical files with the icons and ordering supplied by Windows.
 
-Shell enumeration and icon retrieval run asynchronously on a dedicated background STA worker, so slow locations such as Network do not block the UI. The control fills its parent by default and can display a compact tree or a tree with a resizable contents pane.
+Shell enumeration and icon retrieval run asynchronously on a dedicated background STA worker, so slow locations such as Network do not block the UI. The control fills its parent by default and can display a compact tree or a tree with a resizable contents pane. Right-clicking an item opens the native Windows Shell context menu, including verbs installed by other applications. Physical items can be dragged from the contents pane using the standard Windows `FileDrop` format.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Clone the repository and run the included demo; no host application is required:
 dotnet run --project .\samples\FRExplorer.Demo -c Release
 ```
 
-The demo lets you navigate the Shell, hide or show the contents pane, return to Desktop and open files with their associated Windows application.
+The demo lets you navigate the Shell, hide or show the contents pane, return to Desktop, open files with their associated Windows application, drag physical items and exercise their native Shell context menus.
 
 ## Use from source
 

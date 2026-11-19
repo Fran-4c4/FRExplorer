@@ -9,7 +9,7 @@
 | Property | Contract |
 |---|---|
 | `ContentsPaneVisible` | `true` by default. Hides or shows the right contents pane without changing selection or cancelling work. |
-| `ContentsContextMenu` | `null` by default. Assigns a caller-owned menu to the contents list; FRExplorer never disposes it. |
+| `ContentsContextMenu` | `null` by default, which enables the native Windows Shell menu on right-click. Assigning a caller-owned menu replaces the native list menu; FRExplorer never disposes the assigned menu. The tree always uses the native menu. |
 | `SelectedFolder` | Current tree folder, or `null` before selection. |
 | `SelectedItems` | Snapshot of selected list items. Parsing names may represent virtual Shell items, not only file-system paths. |
 | `IsBusy` | `true` while one or more Shell operations are still executing. A discarded Network request can remain busy until Windows returns. |
@@ -25,6 +25,8 @@
 ### Methods
 
 `ResetToDesktopAsync(CancellationToken)` initializes the control if necessary, selects Desktop and restores it to the top of the tree. An already-cancelled token prevents Shell work. Once Windows has entered a Shell call, cancellation discards the eventual result but cannot forcibly abort that operating-system call.
+
+Physical files and folders selected in the contents list initiate a standard `FileDrop` drag. Virtual items that do not resolve to a physical path are not included in that drag.
 
 ## `ShellItemInfo`
 

@@ -138,6 +138,7 @@ public sealed class ShellExplorerControl : UserControl
         folders.ImageList = shellIcons;
         folders.BeforeExpand += HandleBeforeExpand;
         folders.AfterSelect += HandleAfterSelect;
+        folders.NodeMouseClick += HandleFolderMouseClick;
         browser.Panel1.Controls.Add(folders);
 
         contents.Dock = DockStyle.Fill;
@@ -153,6 +154,7 @@ public sealed class ShellExplorerControl : UserControl
         contents.DoubleClick += HandleContentsDoubleClick;
         contents.KeyDown += HandleContentsKeyDown;
         contents.ItemDrag += (_, _) => BeginFileDrag();
+        contents.MouseUp += HandleContentsMouseUp;
         contents.Resize += (_, _) => ResizeNameColumn();
         browser.Panel2.Controls.Add(contents);
 
@@ -407,6 +409,39 @@ public sealed class ShellExplorerControl : UserControl
             folders.SelectedNode = childNode;
             childNode.EnsureVisible();
         }
+    }
+
+    private void HandleFolderMouseClick(object? sender, TreeNodeMouseClickEventArgs eventArgs)
+    {
+        if (eventArgs.Button != MouseButtons.Right || eventArgs.Node?.Tag is not TreeNodeState state)
+        {
+            return;
+        }
+
+        folders.SelectedNode = eventArgs.Node;
+        WindowsShellContextMenu.Show(folders, state.Item.ParsingName, folders.PointToScreen(eventArgs.Location));
+    }
+
+    private void HandleContentsMouseUp(object? sender, MouseEventArgs eventArgs)
+    {
+        if (eventArgs.Button != MouseButtons.Right || ContentsContextMenu is not null)
+        {
+            return;
+        }
+
+        ListViewItem? clicked = contents.GetItemAt(eventArgs.X, eventArgs.Y);
+        if (clicked?.Tag is not ShellItemInfo item)
+        {
+            return;
+        }
+
+        if (!clicked.Selected)
+        {
+            contents.SelectedItems.Clear();
+            clicked.Selected = true;
+        }
+
+        WindowsShellContextMenu.Show(contents, item.ParsingName, contents.PointToScreen(eventArgs.Location));
     }
 
     private TreeNode CreateNode(ShellEntry entry)

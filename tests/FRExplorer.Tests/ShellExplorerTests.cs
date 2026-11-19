@@ -85,6 +85,21 @@ public sealed class ShellExplorerTests
     });
 
     [Fact]
+    public void NativeShellContextMenuCanBeBuiltWithoutInvokingACommand()
+    {
+        string path = Path.Combine(Path.GetTempPath(), $"frexplorer-{Guid.NewGuid():N}.txt");
+        try
+        {
+            File.WriteAllText(path, "FRExplorer Shell menu smoke test.");
+            Assert.True(WindowsShellContextMenu.CanBuild(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void ShownControlLoadsDesktopTreeAndContents() => RunSta(() =>
     {
         Exception? asynchronousFailure = null;
