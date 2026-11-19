@@ -70,6 +70,21 @@ public sealed class ShellExplorerTests
     });
 
     [Fact]
+    public void CompactTreeFillsANarrowParentVertically() => RunSta(() =>
+    {
+        using var form = new Form { ClientSize = new Size(180, 370), ShowInTaskbar = false, Opacity = 0 };
+        using var explorer = new ShellExplorerControl { ContentsPaneVisible = false };
+        form.Controls.Add(explorer);
+        form.Show();
+        Application.DoEvents();
+
+        TreeView tree = Assert.Single(FindControls<TreeView>(explorer));
+        SplitContainer split = Assert.Single(FindControls<SplitContainer>(explorer));
+        Assert.Equal(split.ClientRectangle, split.Panel1.Bounds);
+        Assert.Equal(split.Panel1.ClientRectangle, tree.Bounds);
+    });
+
+    [Fact]
     public void ShownControlLoadsDesktopTreeAndContents() => RunSta(() =>
     {
         Exception? asynchronousFailure = null;

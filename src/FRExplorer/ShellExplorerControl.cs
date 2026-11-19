@@ -58,7 +58,11 @@ public sealed class ShellExplorerControl : UserControl
     public bool ContentsPaneVisible
     {
         get => !browser.Panel2Collapsed;
-        set => browser.Panel2Collapsed = !value;
+        set
+        {
+            browser.Panel2Collapsed = !value;
+            SynchronizeCollapsedPanelBounds();
+        }
     }
 
     /// <summary>
@@ -153,6 +157,29 @@ public sealed class ShellExplorerControl : UserControl
         browser.Panel2.Controls.Add(contents);
 
         Controls.Add(browser);
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        SynchronizeCollapsedPanelBounds();
+    }
+
+    protected override void OnLayout(LayoutEventArgs e)
+    {
+        base.OnLayout(e);
+        SynchronizeCollapsedPanelBounds();
+    }
+
+    private void SynchronizeCollapsedPanelBounds()
+    {
+        if (!browser.Panel2Collapsed || browser.ClientSize.Width <= 0 || browser.ClientSize.Height <= 0)
+        {
+            return;
+        }
+
+        browser.Panel1.Bounds = browser.ClientRectangle;
+        folders.Bounds = browser.Panel1.ClientRectangle;
     }
 
     private void LoadDesktopRoot()
