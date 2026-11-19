@@ -2,7 +2,7 @@
 
 FRExplorer is a reusable WinForms control that displays the real Windows Shell namespace. It includes Desktop, This PC, Network, Recycle Bin, virtual folders, drives and physical files with the icons and ordering supplied by Windows.
 
-Shell enumeration and icon retrieval run asynchronously on background STA threads, so slow locations such as Network do not block the UI. The control fills its parent by default and can display a compact tree or a tree with a resizable contents pane.
+Shell enumeration and icon retrieval run asynchronously on a dedicated background STA worker, so slow locations such as Network do not block the UI. The control fills its parent by default and can display a compact tree or a tree with a resizable contents pane.
 
 ## Requirements
 

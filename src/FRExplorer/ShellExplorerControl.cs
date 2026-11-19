@@ -4,7 +4,7 @@ namespace FRExplorer;
 
 /// <summary>
 /// A resizable WinForms browser for the Windows Shell namespace. Shell calls
-/// run on background STA threads; only completed, current results are applied
+/// run on a background STA worker; only completed, current results are applied
 /// to the UI.
 /// </summary>
 [DefaultEvent(nameof(SelectionChanged))]

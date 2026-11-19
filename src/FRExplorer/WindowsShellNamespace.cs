@@ -55,36 +55,28 @@ internal static class WindowsShellNamespace
             int count = Convert.ToInt32(itemsDispatch.Count, System.Globalization.CultureInfo.InvariantCulture);
             for (int index = 0; index < count; index++)
             {
-                object? item = null;
-                try
+                object? item = itemsDispatch.Item(index);
+                if (item is null)
                 {
-                    item = itemsDispatch.Item(index);
-                    if (item is null)
-                    {
-                        continue;
-                    }
-
-                    dynamic itemDispatch = item;
-                    bool isFolder = Convert.ToBoolean(itemDispatch.IsFolder, System.Globalization.CultureInfo.InvariantCulture);
-                    if (foldersOnly && !isFolder)
-                    {
-                        continue;
-                    }
-
-                    string displayName = Convert.ToString(itemDispatch.Name, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
-                    string itemPath = Convert.ToString(itemDispatch.Path, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
-                    if (displayName.Length == 0 || itemPath.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    var shellItem = new ShellItemInfo(displayName, itemPath, isFolder);
-                    result.Add(new ShellEntry(shellItem, WindowsShellIconProvider.GetSmallIcon(itemPath)));
+                    continue;
                 }
-                finally
+
+                dynamic itemDispatch = item;
+                bool isFolder = Convert.ToBoolean(itemDispatch.IsFolder, System.Globalization.CultureInfo.InvariantCulture);
+                if (foldersOnly && !isFolder)
                 {
-                    ReleaseComObject(item);
+                    continue;
                 }
+
+                string displayName = Convert.ToString(itemDispatch.Name, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
+                string itemPath = Convert.ToString(itemDispatch.Path, System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
+                if (displayName.Length == 0 || itemPath.Length == 0)
+                {
+                    continue;
+                }
+
+                var shellItem = new ShellItemInfo(displayName, itemPath, isFolder);
+                result.Add(new ShellEntry(shellItem, WindowsShellIconProvider.GetSmallIcon(itemPath)));
             }
         }
         catch (Exception exception) when (
@@ -93,13 +85,6 @@ internal static class WindowsShellNamespace
             DisposeEntries(result);
             return [];
         }
-        finally
-        {
-            ReleaseComObject(items);
-            ReleaseComObject(folder);
-            ReleaseComObject(shell);
-        }
-
         // The Shell owns ordering for virtual folders and drives.
         return result;
     }
@@ -112,13 +97,6 @@ internal static class WindowsShellNamespace
         }
     }
 
-    private static void ReleaseComObject(object? value)
-    {
-        if (value is not null && Marshal.IsComObject(value))
-        {
-            Marshal.FinalReleaseComObject(value);
-        }
-    }
 }
 
 internal static class WindowsShellIconProvider
