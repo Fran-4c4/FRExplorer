@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FRExplorer</AssemblyName>
+    <RootNamespace>FRExplorer</RootNamespace>
+    <Description>Asynchronous Windows Shell explorer control for WinForms.</Description>
+    <PackageId>FRExplorer</PackageId>
+    <Authors>FRExplorer contributors</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>
+

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FRExplorer/FRExplorer.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/FRExplorer.Demo/FRExplorer.Demo.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FRExplorer.Tests/FRExplorer.Tests.csproj" />
+  </Folder>
+</Solution>
+
