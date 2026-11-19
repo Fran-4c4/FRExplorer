@@ -1,6 +1,6 @@
 # FRExplorer working rules
 
-- Keep FRExplorer independent from OneCrypt and from any consuming application.
+- Keep FRExplorer independent from every consuming application.
 - Public documentation must describe the current reusable component, its API,
   build, tests and contribution workflow. Keep extraction notes and private
   product plans outside this repository.
