@@ -63,6 +63,7 @@ public sealed class ShellExplorerTests
 
         Assert.Equal(DockStyle.Fill, explorer.Dock);
         Assert.True(explorer.ContentsPaneVisible);
+        Assert.Null(explorer.ContentsContextMenu);
         Assert.Equal(parent.ClientSize, explorer.Size);
 
         explorer.ContentsPaneVisible = false;
